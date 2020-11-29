@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewpoint" content="width=device-width, initial-scale">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <title>Форма регистрации</title>
+</head>
+<body>
+<form action="" class="formWithValidation">
+    <main>
+        <div class="circle"></div>
+        <div class="register-form-container">
+            <h1 class="form-title">
+                Регистрация
+            </h1>
+            <div class="form-fields">
+                <div class="form-field">
+                    <input type="text" class="login field" placeholder="Логин" id="userLogin">
+                </div>
+                <div class="form-field">
+                    <input type="text" class="email field" placeholder="Email" id="userEmail">
+                </div>
+                <div class="form-field">
+                    <input type="password" class="password field" placeholder="Пароль" id="userPassword">
+                </div>
+                <div class="form-field">
+                    <input type="password" class="passwordConfirmation field"
+                           placeholder="Подтвердите пароль" id="repeatPassword">
+                </div>
+            </div>
+            <div class="form-buttons">
+                <button class="button" type="submit">Регистрация</button>
+            </div>
+        </div>
+    </main>
+</form>
+<script>
+    var form = document.querySelector('.formWithValidation')
+    var validateBtn = form.querySelector('.button')
+    var login = form.querySelector('.login')
+    var email = form.querySelector('.email')
+    var password = form.querySelector('.password')
+    var passwordConfirmation = form.querySelector('.passwordConfirmation')
+    var fields = form.querySelectorAll('.field')
+
+    var generateError = function (text) {
+        var error = document.createElement('div')
+        error.className = 'error'
+        error.style.color = 'red'
+        error.innerHTML = text
+        return error
+    }
+
+    var removeValidation = function () {
+        var errors = form.querySelectorAll('.error')
+
+        for (var i = 0; i < errors.length; i++) {
+            errors[i].remove()
+        }
+    }
+
+    var checkFieldsPresence = function () {
+        for (var i = 0; i < fields.length; i++) {
+            if (!fields[i].value) {
+                console.log('field is blank', fields[i])
+                var error = generateError('Заполните эти поля')
+                form[i].parentElement.insertBefore(error, fields[i])
+            }
+        }
+    }
+
+    var checkEmail = function () {
+        var r = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+        if (r.test(email.value) === false) {
+            console.log('incorrect email')
+            var error = generateError('Введите корректный e-mail')
+            email.parentElement.insertBefore(error, email)
+        }
+    }
+
+    var checkPassword = function () {
+        if (password.value.length < 8) {
+            console.log('password too short')
+            var error = generateError('Пароль должен быть не меньше 8 символов')
+            password.parentElement.insertBefore(error, password)
+        }
+        var r = /^[a-zA-Z0-9]+$/;
+        if (r.test(password.value) === false) {
+            console.log('incorrect password')
+            var error = generateError('Для пароля разрешены только латинские буквы и цифры')
+            password.parentElement.insertBefore(error, password)
+        }
+        if (password.value !== passwordConfirmation.value) {
+            console.log('not equals')
+            var error = generateError('Пароли не совпадают')
+            password.parentElement.insertBefore(error, password)
+        }
+    }
+
+    form.addEventListener('submit', function (event) {
+        event.preventDefault()
+
+        removeValidation()
+
+        checkFieldsPresence()
+
+        checkEmail()
+
+        checkPassword()
+    })
+</script>
+</body>
+</html>
