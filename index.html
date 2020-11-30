@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewpoint" content="width=device-width, initial-scale">
@@ -9,7 +9,7 @@
     <title>Форма регистрации</title>
 </head>
 <body>
-<form action="" class="formWithValidation">
+<form action="form_process.php" method="post" class="formWithValidation">
     <main>
         <div class="circle"></div>
         <div class="register-form-container">
@@ -18,13 +18,13 @@
             </h1>
             <div class="form-fields">
                 <div class="form-field">
-                    <input type="text" class="login field" placeholder="Логин" id="userLogin">
+                    <input name="login" type="text" class="login field" placeholder="Логин" id="userLogin">
                 </div>
                 <div class="form-field">
-                    <input type="text" class="email field" placeholder="Email" id="userEmail">
+                    <input name="email" type="text" class="email field" placeholder="Email" id="userEmail">
                 </div>
                 <div class="form-field">
-                    <input type="password" class="password field" placeholder="Пароль" id="userPassword">
+                    <input name="pass" type="password" class="password field" placeholder="Пароль" id="userPassword">
                 </div>
                 <div class="form-field">
                     <input type="password" class="passwordConfirmation field"
@@ -68,6 +68,7 @@
                 console.log('field is blank', fields[i])
                 var error = generateError('Заполните эти поля')
                 form[i].parentElement.insertBefore(error, fields[i])
+                return false
             }
         }
     }
@@ -78,38 +79,60 @@
             console.log('incorrect email')
             var error = generateError('Введите корректный e-mail')
             email.parentElement.insertBefore(error, email)
+            return false
         }
     }
 
-    var checkPassword = function () {
+    var checkPasswordLen = function () {
         if (password.value.length < 8) {
             console.log('password too short')
             var error = generateError('Пароль должен быть не меньше 8 символов')
             password.parentElement.insertBefore(error, password)
+            return false
         }
+    }
+
+    var passwordValidation = function () {
         var r = /^[a-zA-Z0-9]+$/;
         if (r.test(password.value) === false) {
             console.log('incorrect password')
             var error = generateError('Для пароля разрешены только латинские буквы и цифры')
             password.parentElement.insertBefore(error, password)
+            return false
         }
+    }
+
+    var passwordMatch = function () {
         if (password.value !== passwordConfirmation.value) {
             console.log('not equals')
             var error = generateError('Пароли не совпадают')
             password.parentElement.insertBefore(error, password)
+            return false
         }
     }
 
     form.addEventListener('submit', function (event) {
-        event.preventDefault()
-
         removeValidation()
 
-        checkFieldsPresence()
+        if (checkFieldsPresence() === false) {
+            event.preventDefault()
+        }
 
-        checkEmail()
+        if (checkEmail() === false) {
+            event.preventDefault()
+        }
 
-        checkPassword()
+        if (checkPasswordLen() === false) {
+            event.preventDefault()
+        }
+
+        if (passwordValidation() === false) {
+            event.preventDefault()
+        }
+
+        if (passwordMatch() === false) {
+            event.preventDefault()
+        }
     })
 </script>
 </body>
