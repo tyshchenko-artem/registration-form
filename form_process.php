@@ -23,6 +23,6 @@ VALUES (NULL,  '$login',  '$email',  '$pass')");
 
 $mysql->close();
 
-header('Location: /');
+header('Location: /view_result.php');
 
 ?>
